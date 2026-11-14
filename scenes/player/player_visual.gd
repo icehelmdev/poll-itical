@@ -5,6 +5,12 @@ extends Node3D
 ## Place this node at the character's feet so scaling squishes toward the ground.
 
 @export var body: Player
+## Child mesh that is turned (around Y only) to always face the camera.
+## Rotating the mesh node itself keeps the outline's next_pass working,
+## unlike a material billboard mode.
+@export var face_camera_target: Node3D
+## Extra yaw if the model's front isn't +Z.
+@export_range(-180.0, 180.0, 1.0, "degrees") var face_camera_yaw_offset: float = 0.0
 
 @export_group("Hop")
 ## Hops per second at full speed.
@@ -54,6 +60,23 @@ func _physics_process(delta: float) -> void:
 	# Preserve volume: when taller, get thinner.
 	var width := 1.0 / sqrt(maxf(_scale_y, 0.1))
 	scale = Vector3(width, _scale_y, width)
+
+
+func _process(_delta: float) -> void:
+	_face_camera()
+
+
+func _face_camera() -> void:
+	if face_camera_target == null:
+		return
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		return
+	# Match the camera's yaw so the model's front (+Z) points back at the screen.
+	# Applied on the child so the lean on this node stays in world space.
+	var yaw := camera.global_rotation.y + deg_to_rad(face_camera_yaw_offset)
+	# The player body never yaws, so local yaw == world yaw here.
+	face_camera_target.rotation = Vector3(0.0, yaw, 0.0)
 
 
 func _update_start_stop(is_moving: bool) -> void:

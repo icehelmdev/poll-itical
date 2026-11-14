@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://01llm1ph4or5"]
 
-[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://b6catao2vxkdk" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="Script" uid="uid://o1h261653uad" path="res://scenes/camera/follow_camera.gd" id="2_camera"]
-[ext_resource type="Material" path="res://materials/unlit_outlined_hard_edges.tres" id="3_material"]
+[ext_resource type="Material" uid="uid://bjnq17rkr1nu0" path="res://materials/unlit_outlined_hard_edges.tres" id="3_material"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_main"]
 
@@ -98,4 +98,4 @@ size = 18.0
 far = 200.0
 script = ExtResource("2_camera")
 target = NodePath("../Player")
-follow_offset = Vector3(0, 15, 15)
+follow_offset = Vector3(10, 10, 10)

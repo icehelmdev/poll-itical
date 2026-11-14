@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cbcr20hwtgp0b"]
+
+[ext_resource type="Material" uid="uid://becs601i8j106" path="res://materials/player_silhouette_outline.tres" id="1_outline"]
+
+[resource]
+next_pass = ExtResource("1_outline")
+shading_mode = 0
+albedo_color = Color(0.9411765, 0.9647059, 0.9411765, 1)
+stencil_mode = 3
+stencil_flags = 2
