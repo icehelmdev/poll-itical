@@ -2,7 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://b6catao2vxkdk" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="Script" uid="uid://o1h261653uad" path="res://scenes/camera/follow_camera.gd" id="2_camera"]
+[ext_resource type="PackedScene" uid="uid://cbk61l8d2147e" path="res://meshes/props/SM_Streetlight.glb" id="2_l3cfh"]
+[ext_resource type="PackedScene" uid="uid://v3x34ricfef6" path="res://meshes/props/SM_Start_Circle.glb" id="3_6q06x"]
 [ext_resource type="Material" uid="uid://bjnq17rkr1nu0" path="res://materials/unlit_outlined_hard_edges.tres" id="3_material"]
+[ext_resource type="PackedScene" uid="uid://b0mol15k2sxvt" path="res://meshes/props/SM_Phone.glb" id="4_ow5a4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_main"]
 
@@ -21,13 +24,6 @@ size = Vector3(144, 1, 155)
 [sub_resource type="BoxMesh" id="BoxMesh_floor"]
 material = ExtResource("3_material")
 size = Vector3(128, 1, 168)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_obstacle"]
-size = Vector3(2, 2, 2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_obstacle"]
-material = ExtResource("3_material")
-size = Vector3(2, 2, 2)
 
 [node name="Main" type="Node3D" unique_id=1972689488]
 
@@ -49,44 +45,14 @@ mesh = SubResource("BoxMesh_floor")
 
 [node name="Obstacles" type="Node3D" parent="." unique_id=903411358]
 
-[node name="Obstacle1" type="StaticBody3D" parent="Obstacles" unique_id=1311295284]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1, -4)
+[node name="SM_Streetlight2" parent="Obstacles" unique_id=1139822929 instance=ExtResource("2_l3cfh")]
+transform = Transform3D(1.7677668, 0, 1.767767, 0, 2.4999998, 0, -1.767767, 0, 1.7677668, -4.9448957, 0.08095372, 2.0805101)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacles/Obstacle1" unique_id=1101519058]
-transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, 0, 0, 0)
-shape = SubResource("BoxShape3D_obstacle")
+[node name="SM_Start_Circle2" parent="Obstacles" unique_id=2143995201 instance=ExtResource("3_6q06x")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0.01, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacles/Obstacle1" unique_id=445389480]
-mesh = SubResource("BoxMesh_obstacle")
-
-[node name="Obstacle2" type="StaticBody3D" parent="Obstacles" unique_id=1053140493]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1, 3)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacles/Obstacle2" unique_id=869204344]
-shape = SubResource("BoxShape3D_obstacle")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacles/Obstacle2" unique_id=199698882]
-transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, 0, 0, 0)
-mesh = SubResource("BoxMesh_obstacle")
-
-[node name="Obstacle3" type="StaticBody3D" parent="Obstacles" unique_id=1058566825]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, 9)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacles/Obstacle3" unique_id=2112559229]
-shape = SubResource("BoxShape3D_obstacle")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacles/Obstacle3" unique_id=748425663]
-transform = Transform3D(0.49999997, 0, 0.86602545, 0, 1, 0, -0.86602545, 0, 0.49999997, 0, 0, 0)
-mesh = SubResource("BoxMesh_obstacle")
-
-[node name="Obstacle4" type="StaticBody3D" parent="Obstacles" unique_id=340352483]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1, -10)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Obstacles/Obstacle4" unique_id=212483901]
-shape = SubResource("BoxShape3D_obstacle")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Obstacles/Obstacle4" unique_id=944193060]
-mesh = SubResource("BoxMesh_obstacle")
+[node name="SM_Phone2" parent="Obstacles" unique_id=180644280 instance=ExtResource("4_ow5a4")]
+transform = Transform3D(0.85236204, 0.2477812, -0.4605251, 0, 0.8806258, 0.47381243, 0.5229521, -0.40385973, 0.75061196, -0.7667918, 4.1492796, 2.4803882)
 
 [node name="Player" parent="." unique_id=1998818608 instance=ExtResource("1_player")]
 
@@ -98,4 +64,4 @@ size = 18.0
 far = 200.0
 script = ExtResource("2_camera")
 target = NodePath("../Player")
-follow_offset = Vector3(10, 10, 10)
+follow_offset = Vector3(0, 10, 10)

@@ -2,48 +2,26 @@
 
 [ext_resource type="Script" uid="uid://k0ol8c60fark" path="res://scenes/player/player.gd" id="1_player"]
 [ext_resource type="Script" uid="uid://bac85smq8biic" path="res://scenes/player/player_visual.gd" id="2_visual"]
-[ext_resource type="PackedScene" uid="uid://cxa723lt1r1ji" path="res://meshes/SK_Character.glb" id="3_lvxji"]
-[ext_resource type="Material" uid="uid://dkwgfpnjqnjsb" path="res://materials/unlit_outlined.tres" id="3_material"]
+[ext_resource type="PackedScene" uid="uid://cemnya8fo8ir4" path="res://meshes/characters/SK_Character_Idle.glb" id="3_gmlin"]
+[ext_resource type="PackedScene" uid="uid://wp3tc2lhfugd" path="res://meshes/characters/SM_Shadow.glb" id="4_lvxji"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
 radius = 0.4
 height = 1.8
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_player"]
-material = ExtResource("3_material")
-radius = 0.4
-height = 1.8
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wf3wp"]
-shading_mode = 0
-albedo_color = Color(0.18039216, 0.1882353, 0.21568628, 1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_r3d6m"]
-material = SubResource("StandardMaterial3D_wf3wp")
-top_radius = 0.6166992
-bottom_radius = 0.6166992
-height = 0.015380859
-
 [node name="Player" type="CharacterBody3D" unique_id=719344599]
 script = ExtResource("1_player")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1062309996]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.97612303, 0)
 shape = SubResource("CapsuleShape3D_player")
+
+[node name="SM_Shadow" parent="." unique_id=2129088955 instance=ExtResource("4_lvxji")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07744421, 0)
 
 [node name="Visual" type="Node3D" parent="." unique_id=336460453 node_paths=PackedStringArray("body", "face_camera_target")]
 script = ExtResource("2_visual")
 body = NodePath("..")
 face_camera_target = NodePath("SK_Character")
 
-[node name="SK_Character" parent="Visual" unique_id=1489781032 instance=ExtResource("3_lvxji")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Visual" unique_id=2123079795]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-visible = false
-mesh = SubResource("CapsuleMesh_player")
-
-[node name="Shadow" type="MeshInstance3D" parent="." unique_id=2077139349]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0020678043, 0)
-mesh = SubResource("CylinderMesh_r3d6m")
+[node name="SK_Character" parent="Visual" unique_id=459386403 instance=ExtResource("3_gmlin")]
