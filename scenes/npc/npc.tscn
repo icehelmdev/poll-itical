@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/npc/npc.gd" id="1_npc"]
+[ext_resource type="Script" uid="uid://bac85smq8biic" path="res://scenes/player/player_visual.gd" id="2_visual"]
+[ext_resource type="PackedScene" uid="uid://cemnya8fo8ir4" path="res://meshes/characters/SK_Character_Idle.glb" id="3_mesh"]
+[ext_resource type="PackedScene" uid="uid://wp3tc2lhfugd" path="res://meshes/characters/SM_Shadow.glb" id="4_shadow"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_npc"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_space"]
+height = 1.0
+radius = 1.3
+
+[node name="NPC" type="CharacterBody3D"]
+script = ExtResource("1_npc")
+move_speed = 3.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.97612303, 0)
+shape = SubResource("CapsuleShape3D_npc")
+
+[node name="PersonalSpace" type="Area3D" parent="."]
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PersonalSpace"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CylinderShape3D_space")
+
+[node name="SM_Shadow" parent="." instance=ExtResource("4_shadow")]
+transform = Transform3D(1.25, 0, 0, 0, 1, 0, 0, 0, 0.6, 0, 0.07744421, 0)
+
+[node name="Visual" type="Node3D" parent="." node_paths=PackedStringArray("body", "face_camera_target")]
+script = ExtResource("2_visual")
+body = NodePath("..")
+face_camera_target = NodePath("SK_Character")
+
+[node name="SK_Character" parent="Visual" instance=ExtResource("3_mesh")]

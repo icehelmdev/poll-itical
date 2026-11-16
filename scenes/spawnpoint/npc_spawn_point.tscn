@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/spawnpoint/npc_spawn_point.gd" id="1_spawn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_preview"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.2, 0.8, 1, 0.3)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_preview"]
+material = SubResource("StandardMaterial3D_preview")
+top_radius = 1.0
+bottom_radius = 1.0
+height = 0.02
+radial_segments = 48
+rings = 1
+
+[node name="NPCSpawnPoint" type="Node3D"]
+script = ExtResource("1_spawn")
+
+[node name="Preview" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_preview")

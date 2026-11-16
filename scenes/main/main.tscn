@@ -5,7 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://cbk61l8d2147e" path="res://meshes/props/SM_Streetlight.glb" id="2_l3cfh"]
 [ext_resource type="PackedScene" uid="uid://v3x34ricfef6" path="res://meshes/props/SM_Start_Circle.glb" id="3_6q06x"]
 [ext_resource type="Material" uid="uid://bjnq17rkr1nu0" path="res://materials/unlit_outlined_hard_edges.tres" id="3_material"]
-[ext_resource type="PackedScene" uid="uid://b0mol15k2sxvt" path="res://meshes/props/SM_Phone.glb" id="4_ow5a4"]
+[ext_resource type="PackedScene" uid="uid://b7i2apq6nfseh" path="res://meshes/items/SM_Trashcan.glb" id="5_hujxm"]
+[ext_resource type="PackedScene" uid="uid://qfkypdorr03c" path="res://meshes/props/SM_Parkbench.glb" id="6_yyfjg"]
+[ext_resource type="PackedScene" path="res://scenes/spawnpoint/npc_spawn_point.tscn" id="7_spawn"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_main"]
 
@@ -32,6 +34,7 @@ environment = SubResource("Environment_main")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1414194811]
 transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 10, 0)
+visible = false
 shadow_enabled = true
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=248328422]
@@ -46,13 +49,24 @@ mesh = SubResource("BoxMesh_floor")
 [node name="Obstacles" type="Node3D" parent="." unique_id=903411358]
 
 [node name="SM_Streetlight2" parent="Obstacles" unique_id=1139822929 instance=ExtResource("2_l3cfh")]
-transform = Transform3D(1.7677668, 0, 1.767767, 0, 2.4999998, 0, -1.767767, 0, 1.7677668, -4.9448957, 0.08095372, 2.0805101)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.276304, 0, -0.37321198)
 
 [node name="SM_Start_Circle2" parent="Obstacles" unique_id=2143995201 instance=ExtResource("3_6q06x")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0.01, 0)
 
-[node name="SM_Phone2" parent="Obstacles" unique_id=180644280 instance=ExtResource("4_ow5a4")]
-transform = Transform3D(0.85236204, 0.2477812, -0.4605251, 0, 0.8806258, 0.47381243, 0.5229521, -0.40385973, 0.75061196, -0.7667918, 4.1492796, 2.4803882)
+[node name="SM_Trashcan2" parent="Obstacles" unique_id=722945288 instance=ExtResource("5_hujxm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47978765, 0.08420801, -5.3642654)
+
+[node name="SM_Parkbench2" parent="Obstacles" unique_id=652998130 instance=ExtResource("6_yyfjg")]
+transform = Transform3D(0.8838834, 0, 0.8838835, 0, 1.2499999, 0, -0.8838835, 0, 0.8838834, -2.4761806, 0.02003628, -2.95138)
+
+[node name="NPCSpawnPoint" parent="." unique_id=523409215 instance=ExtResource("7_spawn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.270147, 0, -0.17078638)
+npc_count = 6
+
+[node name="NPCSpawnPoint2" parent="." unique_id=229303826 instance=ExtResource("7_spawn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.451052, 0, -16.00793)
+npc_count = 6
 
 [node name="Player" parent="." unique_id=1998818608 instance=ExtResource("1_player")]
 

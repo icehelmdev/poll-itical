@@ -4,7 +4,7 @@ extends Node3D
 ## and a lean into the movement direction. Purely visual; collision is untouched.
 ## Place this node at the character's feet so scaling squishes toward the ground.
 
-@export var body: Player
+@export var body: Actor
 ## Child mesh that is turned (around Y only) to always face the camera.
 ## Rotating the mesh node itself keeps the outline's next_pass working,
 ## unlike a material billboard mode.
