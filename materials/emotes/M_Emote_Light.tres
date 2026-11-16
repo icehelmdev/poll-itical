@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://b5rmt4imjtvfs"]
+
+[resource]
+shading_mode = 0
+diffuse_mode = 3
+albedo_color = Color(0.9411765, 0.9647059, 0.9411765, 1)
+billboard_mode = 1
