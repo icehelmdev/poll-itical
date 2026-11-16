@@ -8,6 +8,38 @@
 [ext_resource type="PackedScene" uid="uid://b7i2apq6nfseh" path="res://meshes/items/SM_Trashcan.glb" id="5_hujxm"]
 [ext_resource type="PackedScene" uid="uid://qfkypdorr03c" path="res://meshes/props/SM_Parkbench.glb" id="6_yyfjg"]
 [ext_resource type="PackedScene" path="res://scenes/spawnpoint/npc_spawn_point.tscn" id="7_spawn"]
+[ext_resource type="Script" path="res://scenes/politics/belief.gd" id="8_belief"]
+[ext_resource type="Script" path="res://scenes/ui/hud.gd" id="9_hud"]
+
+[sub_resource type="Resource" id="Belief_hippies_peace"]
+script = ExtResource("8_belief")
+emote = 0
+value = 8
+
+[sub_resource type="Resource" id="Belief_hippies_happy"]
+script = ExtResource("8_belief")
+emote = 1
+value = 4
+
+[sub_resource type="Resource" id="Belief_hippies_angry"]
+script = ExtResource("8_belief")
+emote = 2
+value = -6
+
+[sub_resource type="Resource" id="Belief_hawks_peace"]
+script = ExtResource("8_belief")
+emote = 0
+value = -7
+
+[sub_resource type="Resource" id="Belief_hawks_angry"]
+script = ExtResource("8_belief")
+emote = 2
+value = 6
+
+[sub_resource type="Resource" id="Belief_hawks_happy"]
+script = ExtResource("8_belief")
+emote = 1
+value = -2
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_main"]
 
@@ -63,10 +95,14 @@ transform = Transform3D(0.8838834, 0, 0.8838835, 0, 1.2499999, 0, -0.8838835, 0,
 [node name="NPCSpawnPoint" parent="." unique_id=523409215 instance=ExtResource("7_spawn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.270147, 0, -0.17078638)
 npc_count = 6
+group_name = "Pacifists"
+beliefs = Array[ExtResource("8_belief")]([SubResource("Belief_hippies_peace"), SubResource("Belief_hippies_happy"), SubResource("Belief_hippies_angry")])
 
 [node name="NPCSpawnPoint2" parent="." unique_id=229303826 instance=ExtResource("7_spawn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.451052, 0, -16.00793)
 npc_count = 6
+group_name = "Hawks"
+beliefs = Array[ExtResource("8_belief")]([SubResource("Belief_hawks_peace"), SubResource("Belief_hawks_angry"), SubResource("Belief_hawks_happy")])
 
 [node name="Player" parent="." unique_id=1998818608 instance=ExtResource("1_player")]
 
@@ -79,3 +115,6 @@ far = 200.0
 script = ExtResource("2_camera")
 target = NodePath("../Player")
 follow_offset = Vector3(0, 10, 10)
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1730021954]
+script = ExtResource("9_hud")

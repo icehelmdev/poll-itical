@@ -1,8 +1,33 @@
 class_name NPC
 extends Actor
-## Neutral NPC. Wanders around its home position (where it was spawned),
-## walking to random points and idling in between. Steers around other
-## characters (NPCs and the player) instead of getting stuck on them.
+## A member of an NPCSpawnPoint group. Behaviour follows the group's stance:
+## - Neutral: wanders around its home position, idling in between.
+## - Follower: trails the player in a loose crowd (Pikmin style).
+## - Hostile: chases the player when close and attacks in melee.
+## Always steers around other characters instead of getting stuck on them.
+
+## The group this NPC belongs to (set by the spawn point). May be null.
+var group: NPCSpawnPoint
+
+@export_group("Follow")
+@export var follow_speed: float = 5.6
+## Followers gather at a random spot this far (min..max) from the player.
+@export var follow_min_distance: float = 1.6
+@export var follow_max_distance: float = 3.6
+
+@export_group("Hostile")
+@export var chase_speed: float = 4.6
+## Hostile NPCs only chase when the player is closer than this.
+@export var aggro_range: float = 12.0
+@export var attack_range: float = 1.3
+@export var attack_damage: float = 8.0
+@export var attack_cooldown: float = 1.2
+@export var attack_knockback: float = 9.0
+
+@export_group("Reactions")
+## Height of reaction emotes above the NPC's feet.
+@export var reaction_height: float = 2.5
+@export var reaction_size: float = 0.6
 
 @export_group("Wander")
 ## How far from home the NPC will wander.
@@ -34,12 +59,21 @@ var _space_radius: float = 1.3
 var _stuck_timer: float = 0.0
 var _last_check_position: Vector3
 var _stuck_count: int = 0
+var _base_speed: float
+var _follow_offset: Vector3
+var _attack_timer: float = 0.0
+var _was_chasing: bool = false
+var _reaction: Node3D
 
 @onready var _personal_space: Area3D = $PersonalSpace
+@onready var _visual: PlayerVisual = $Visual
 
 
 func _ready() -> void:
 	home_position = global_position
+	_base_speed = move_speed
+	var angle := randf() * TAU
+	_follow_offset = Vector3(cos(angle), 0.0, sin(angle)) * randf_range(follow_min_distance, follow_max_distance)
 	var shape := ($PersonalSpace/CollisionShape3D as CollisionShape3D).shape
 	if shape is CylinderShape3D:
 		_space_radius = shape.radius
@@ -47,12 +81,98 @@ func _ready() -> void:
 		_space_radius = shape.radius
 	_personal_space.body_entered.connect(_on_body_entered)
 	_personal_space.body_exited.connect(_on_body_exited)
+	if group:
+		group.stance_changed.connect(_on_stance_changed)
+		_on_stance_changed(group.stance)
 	_start_idle()
 
 
+## Called by the group when the player's argument reaches it.
+func react_to_argument(delta: float) -> void:
+	if is_zero_approx(delta):
+		return
+	# Small random delay so the crowd doesn't react in perfect unison.
+	await get_tree().create_timer(randf_range(0.05, 0.35)).timeout
+	if not is_inside_tree():
+		return
+	if is_instance_valid(_reaction):
+		_reaction.queue_free()
+	var emote := Emote.Id.HAPPY if delta > 0.0 else Emote.Id.ANGRY
+	_reaction = Emote.pop_above(self, emote, reaction_height, 1.2, reaction_size)
+	_visual.squash(3.0 if delta > 0.0 else 1.5)
+
+
+func get_stance() -> NPCSpawnPoint.Stance:
+	return group.stance if group else NPCSpawnPoint.Stance.NEUTRAL
+
+
 func _get_move_direction(delta: float) -> Vector3:
-	_state_timer -= delta
+	_attack_timer -= delta
 	var separation := _get_separation()
+	match get_stance():
+		NPCSpawnPoint.Stance.FOLLOWER:
+			return _follow_player(separation)
+		NPCSpawnPoint.Stance.HOSTILE:
+			var chase: Variant = _chase_player(separation)
+			if chase != null:
+				return chase
+	return _wander(delta, separation)
+
+
+func _get_player() -> Player:
+	return get_tree().get_first_node_in_group(Player.GROUP) as Player
+
+
+## Walk to our spot in the crowd around the player, slowing on arrival.
+func _follow_player(separation: Vector3) -> Vector3:
+	var player := _get_player()
+	if player == null:
+		return Vector3.ZERO
+	var to_target := player.global_position + _follow_offset - global_position
+	to_target.y = 0.0
+	var distance := to_target.length()
+	if distance < arrive_distance * 1.5:
+		if separation.length() > idle_crowding_threshold:
+			return (separation * separation_strength).limit_length(0.6)
+		return Vector3.ZERO
+	var desired := to_target.normalized() * clampf(distance / 1.5, 0.3, 1.0)
+	return _steer(desired, separation)
+
+
+## Chase and hit the player. Returns null when the player is out of aggro range
+## so the caller falls back to wandering.
+func _chase_player(separation: Vector3) -> Variant:
+	var player := _get_player()
+	if player == null or player.is_dead():
+		return null
+	var to_player := player.global_position - global_position
+	to_player.y = 0.0
+	var distance := to_player.length()
+	if distance > aggro_range:
+		if _was_chasing:
+			# Lost them: settle down and wander where we ended up.
+			_was_chasing = false
+			home_position = global_position
+			_start_idle()
+		return null
+	_was_chasing = true
+	if distance <= attack_range:
+		if _attack_timer <= 0.0:
+			_attack(player, to_player.normalized())
+		return Vector3.ZERO
+	return _steer(to_player.normalized(), separation)
+
+
+func _attack(player: Player, direction: Vector3) -> void:
+	_attack_timer = attack_cooldown
+	_visual.squash(5.0)
+	# A little lunge for readability.
+	velocity += direction * 4.0
+	player.take_hit(attack_damage, direction * attack_knockback)
+
+
+func _wander(delta: float, separation: Vector3) -> Vector3:
+	_state_timer -= delta
 
 	if not _is_walking:
 		if _state_timer <= 0.0:
@@ -72,7 +192,11 @@ func _get_move_direction(delta: float) -> Vector3:
 	if _check_stuck(delta):
 		return Vector3.ZERO
 
-	var desired := to_target.normalized()
+	return _steer(to_target.normalized(), separation)
+
+
+## Blend a desired direction with crowd avoidance.
+func _steer(desired: Vector3, separation: Vector3) -> Vector3:
 	if separation != Vector3.ZERO:
 		# Sidestep on whichever side is closer to where we want to go.
 		var side := Vector3(-separation.z, 0.0, separation.x)
@@ -80,6 +204,22 @@ func _get_move_direction(delta: float) -> Vector3:
 			side = -side
 		desired += separation * separation_strength + side * sidestep_strength
 	return desired.limit_length(1.0)
+
+
+func _on_stance_changed(stance: NPCSpawnPoint.Stance) -> void:
+	_was_chasing = false
+	match stance:
+		NPCSpawnPoint.Stance.FOLLOWER:
+			move_speed = follow_speed
+		NPCSpawnPoint.Stance.HOSTILE:
+			move_speed = chase_speed
+		_:
+			move_speed = _base_speed
+	# Whatever we were doing, start wandering from where we stand now.
+	home_position = global_position
+	_start_idle()
+	if is_inside_tree():
+		_visual.squash(4.0)
 
 
 ## Sum of push-away vectors from nearby characters, stronger the closer they are.

@@ -62,6 +62,11 @@ func _physics_process(delta: float) -> void:
 	scale = Vector3(width, _scale_y, width)
 
 
+## Kicks the squash & stretch spring (positive = squash down, then bounce back).
+func squash(amount: float) -> void:
+	_scale_velocity -= amount
+
+
 func _process(_delta: float) -> void:
 	_face_camera()
 
