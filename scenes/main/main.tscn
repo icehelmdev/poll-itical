@@ -8,38 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://b7i2apq6nfseh" path="res://meshes/items/SM_Trashcan.glb" id="5_hujxm"]
 [ext_resource type="PackedScene" uid="uid://qfkypdorr03c" path="res://meshes/props/SM_Parkbench.glb" id="6_yyfjg"]
 [ext_resource type="PackedScene" path="res://scenes/spawnpoint/npc_spawn_point.tscn" id="7_spawn"]
-[ext_resource type="Script" path="res://scenes/politics/belief.gd" id="8_belief"]
-[ext_resource type="Script" path="res://scenes/ui/hud.gd" id="9_hud"]
-
-[sub_resource type="Resource" id="Belief_hippies_peace"]
-script = ExtResource("8_belief")
-emote = 0
-value = 8
-
-[sub_resource type="Resource" id="Belief_hippies_happy"]
-script = ExtResource("8_belief")
-emote = 1
-value = 4
-
-[sub_resource type="Resource" id="Belief_hippies_angry"]
-script = ExtResource("8_belief")
-emote = 2
-value = -6
-
-[sub_resource type="Resource" id="Belief_hawks_peace"]
-script = ExtResource("8_belief")
-emote = 0
-value = -7
-
-[sub_resource type="Resource" id="Belief_hawks_angry"]
-script = ExtResource("8_belief")
-emote = 2
-value = 6
-
-[sub_resource type="Resource" id="Belief_hawks_happy"]
-script = ExtResource("8_belief")
-emote = 1
-value = -2
+[ext_resource type="Script" uid="uid://b57h8r3qyvdk8" path="res://scenes/politics/belief.gd" id="8_belief"]
+[ext_resource type="Script" uid="uid://dstp7jwdalrjx" path="res://scenes/ui/hud.gd" id="9_hud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_main"]
 
@@ -58,6 +28,40 @@ size = Vector3(144, 1, 155)
 [sub_resource type="BoxMesh" id="BoxMesh_floor"]
 material = ExtResource("3_material")
 size = Vector3(128, 1, 168)
+
+[sub_resource type="Resource" id="Belief_hippies_peace"]
+resource_name = "Peace +8"
+script = ExtResource("8_belief")
+value = 8
+
+[sub_resource type="Resource" id="Belief_hippies_happy"]
+resource_name = "Happy +4"
+script = ExtResource("8_belief")
+emote = 1
+value = 4
+
+[sub_resource type="Resource" id="Belief_hippies_angry"]
+resource_name = "Angry -6"
+script = ExtResource("8_belief")
+emote = 2
+value = -6
+
+[sub_resource type="Resource" id="Belief_hawks_peace"]
+resource_name = "Peace -7"
+script = ExtResource("8_belief")
+value = -7
+
+[sub_resource type="Resource" id="Belief_hawks_angry"]
+resource_name = "Angry +6"
+script = ExtResource("8_belief")
+emote = 2
+value = 6
+
+[sub_resource type="Resource" id="Belief_hawks_happy"]
+resource_name = "Happy -2"
+script = ExtResource("8_belief")
+emote = 1
+value = -2
 
 [node name="Main" type="Node3D" unique_id=1972689488]
 

@@ -51,6 +51,11 @@ _subresources={
 "use_external/fallback_path": "res://materials/emotes/M_Emote_Light.tres",
 "use_external/path": "uid://b5rmt4imjtvfs"
 }
+},
+"nodes": {
+"PATH:Emote_Peace": {
+"mesh_instance/cast_shadow": 0
+}
 }
 }
 gltf/naming_version=2
